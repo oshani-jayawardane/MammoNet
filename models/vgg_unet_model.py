@@ -41,25 +41,25 @@ def TL_unet_model(input_shape, num_classes):
     print(up1.shape)
     concat_1 = concatenate([up1, base_VGG.get_layer("block4_conv3").output], axis=3)
     conv6 = Conv2D(512, (3, 3), activation='relu', padding='same')(concat_1)
-    conv6 = Conv2D(512, (3, 3), activation='relu', padding='same')(conv6)
+    conv6 = Conv2D(512, (3, 3), activation='relu', padding='same', kernel_regularizer=l1_l2(l1=1e-3, l2=1e-3))(conv6)
 
     up2 = Conv2DTranspose(256, (2, 2), strides=(2, 2), padding='same')(conv6)
     print(up2.shape)
     concat_2 = concatenate([up2, base_VGG.get_layer("block3_conv3").output], axis=3)
     conv7 = Conv2D(256, (3, 3), activation='relu', padding='same')(concat_2)
-    conv7 = Conv2D(256, (3, 3), activation='relu', padding='same')(conv7)
+    conv7 = Conv2D(256, (3, 3), activation='relu', padding='same', kernel_regularizer=l1_l2(l1=1e-4, l2=1e-4))(conv7)
 
     up3 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same')(conv7)
     print(up3.shape)
     concat_3 = concatenate([up3, base_VGG.get_layer("block2_conv2").output], axis=3)
     conv8 = Conv2D(128, (3, 3), activation='relu', padding='same')(concat_3)
-    conv8 = Conv2D(128, (3, 3), activation='relu', padding='same')(conv8)
+    conv8 = Conv2D(128, (3, 3), activation='relu', padding='same', kernel_regularizer=l1_l2(l1=1e-5, l2=1e-5))(conv8)
 
     up4 = Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same')(conv8)
     print(up4.shape)
     concat_4 = concatenate([up4, base_VGG.get_layer("block1_conv2").output], axis=3)
     conv9 = Conv2D(64, (3, 3), activation='relu', padding='same')(concat_4)
-    conv9 = Conv2D(64, (3, 3), activation='relu', padding='same')(conv9)
+    conv9 = Conv2D(64, (3, 3), activation='relu', padding='same', kernel_regularizer=l1_l2(l1=1e-6, l2=1e-6))(conv9)
     
     if num_classes==1:
         activation = 'sigmoid'
